@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WhatsApp Chat Analyzer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 24px;
+      }
+
+      .container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 24px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        margin: auto;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 24px;
+      }
+
+      p {
+        color: #555;
+      }
+
+      input[type="file"] {
+        margin-top: 16px;
+      }
+
+      .note {
+        margin-top: 12px;
+        font-size: 12px;
+        color: #888;
+      }
+      #show-instructions {
+        margin-top: 12px;
+        padding: 8px 12px;
+        border: none;
+        background-color: #4285f4;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .instructions {
+        display: none;
+        margin-top: 12px;
+        text-align: left;
+        font-size: 14px;
+        color: #444;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .instructions.visible {
+        display: block;
+      }
+      .instructions h3 {
+        font-size: 18px;
+        margin: 12px 0 6px;
+      }
+      .instructions ul {
+        padding-left: 20px;
+      }
+
+      .view-toggle {
+        margin: 16px 0;
+        text-align: center;
+      }
+
+      .view-toggle button {
+        background-color: #ddd;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        margin: 0 4px;
+        cursor: pointer;
+      }
+
+      .view-toggle button.active {
+        background-color: #555;
+        color: #fff;
+      }
+
+      .charts-container {
+        margin: 24px auto 0;
+        width: 100%;
+        display: grid;
+        grid-gap: 24px;
+      }
+      @media (min-width: 1200px) {
+        .charts-container {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (min-width: 768px) and (max-width: 1199px) {
+        .charts-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 767px) {
+        .charts-container {
+          grid-template-columns: 1fr;
+        }
+      }
+      .charts-container canvas {
+        width: 100%;
+        aspect-ratio: 5 / 3;
+      }
+
+      .emoji-selector {
+        margin: 16px auto;
+        max-width: 800px;
+        text-align: center;
+      }
+
+      .emoji-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+        grid-gap: 8px;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      .emoji-options label {
+        display: inline-flex;
+        align-items: center;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .emoji-options input {
+        margin-right: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>WhatsApp Chat Analyzer</h1>
+      <p>Upload your WhatsApp chat export (.txt) to analyze.</p>
+      <input type="file" id="fileInput" accept=".txt" />
+      <button id="show-instructions" type="button">How to get a chat export</button>
+      <div id="export-instructions" class="instructions">
+        <h3>How to export WhatsApp chat</h3>
+        <ul>
+          <li><strong>Android:</strong> Open the chat, tap ⋮ (More options) → More → Export chat → select <em>Without Media</em>. A <code>.zip</code> archive will be downloaded — unzip it and choose the <code>*_chat.txt</code> file inside.</li>
+          <li><strong>iPhone:</strong> Open the chat, tap the contact name → Export Chat → select <em>Without Media</em>. A <code>.zip</code> archive will be downloaded — unzip it and choose the <code>*_chat.txt</code> file inside.</li>
+          <li>Then upload the <code>*_chat.txt</code> file here.</li>
+        </ul>
+      </div>
+      <p class="note">
+        You can go offline once this page is loaded. No data will be sent to any
+        server.
+      </p>
+    </div>
+    <div class="view-toggle">
+      <button data-view="week">Weekly</button>
+      <button data-view="month" class="active">Monthly</button>
+    </div>
+
+    <div class="emoji-selector">
+      <p>Select emojis to analyze:</p>
+      <div id="emoji-options" class="emoji-options"></div>
+    </div>
+
+    <div id="charts" class="charts-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="reference.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
